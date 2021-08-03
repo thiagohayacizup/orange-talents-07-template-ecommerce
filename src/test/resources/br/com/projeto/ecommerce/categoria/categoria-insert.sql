@@ -1,0 +1,1 @@
+INSERT INTO Categoria( nome ) VALUES ('Hardware');
