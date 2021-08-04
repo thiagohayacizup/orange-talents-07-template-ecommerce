@@ -3,6 +3,7 @@ package br.com.projeto.ecommerce.produto.modelo;
 import br.com.projeto.ecommerce.categoria.modelo.Categoria;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoDeveTerNoMinimoTresCaracteristicasException;
 import br.com.projeto.ecommerce.produto.repositorio.ProdutoRepositorio;
+import br.com.projeto.ecommerce.usuario.modelo.Usuario;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -45,6 +46,10 @@ public class Produto {
     private Categoria categoria;
 
     @NotNull
+    @ManyToOne( cascade = CascadeType.PERSIST )
+    private Usuario dono;
+
+    @NotNull
     private final Instant dataCadastro = Instant.now();
 
     private Produto(){}
@@ -60,6 +65,7 @@ public class Produto {
                     String.format("Produto { %s } deve ter no minimo 3 caracteristicas", nome)
             );
         this.caracteristicas = builder.caracteristicas;
+        this.dono = builder.usuario;
     }
 
     public static class Builder {
@@ -70,6 +76,12 @@ public class Produto {
         private List<Caracteristica> caracteristicas;
         private String descricao;
         private Categoria categoria;
+        private Usuario usuario;
+
+        public Builder comUsuario( final Usuario usuario ){
+            this.usuario = usuario;
+            return this;
+        }
 
         public Builder comNome(final String nome) {
             this.nome = nome;

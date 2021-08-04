@@ -5,6 +5,8 @@ import br.com.projeto.ecommerce.categoria.repositorio.CategoriaRepositorio;
 import br.com.projeto.ecommerce.produto.modelo.Caracteristica;
 import br.com.projeto.ecommerce.produto.modelo.Produto;
 import br.com.projeto.ecommerce.produto.repositorio.ProdutoRepositorio;
+import br.com.projeto.ecommerce.usuario.modelo.Usuario;
+import br.com.projeto.ecommerce.usuario.repositorio.UsuarioRepositorio;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -49,7 +51,13 @@ class ProdutoRequisicao {
         this.categoriaId = categoriaId;
     }
 
-    ProdutoResposta cadastrar(final ProdutoRepositorio produtoRepositorio, final CategoriaRepositorio categoriaRepositorio){
+    private String dono;
+
+    public void setDono( final String dono ){
+        this.dono = dono;
+    }
+
+    ProdutoResposta cadastrar(final ProdutoRepositorio produtoRepositorio, final CategoriaRepositorio categoriaRepositorio, final UsuarioRepositorio usuarioRepositorio){
         return new ProdutoResposta(
                 builder.comCaracteristicas(
                         caracteristicas
@@ -57,6 +65,7 @@ class ProdutoRequisicao {
                                 .map( caracteristicas -> new Caracteristica(caracteristicas.getNome(), caracteristicas.getDescricao()) )
                                 .collect(Collectors.toList())
                 ).comCategoria( Categoria.buscarPorId( categoriaId, categoriaRepositorio ) )
+                .comUsuario(Usuario.buscarPorEmail( dono, usuarioRepositorio ) )
                 .construir()
                 .cadastrar( produtoRepositorio )
         );

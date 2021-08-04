@@ -13,5 +13,6 @@
     }
   ],
   "descricao": "Smartphone samsung",
-  "categoriaId": 1
+  "categoriaId": 1,
+  "dono": "marcos.silveira@email.com"
 }
