@@ -1,11 +1,11 @@
 package br.com.projeto.ecommerce.categoria.modelo;
 
 import br.com.projeto.ecommerce.categoria.modelo.excessao.CategoriaJaCadastradaException;
+import br.com.projeto.ecommerce.categoria.modelo.excessao.CategoriaNaoEncontradaException;
 import br.com.projeto.ecommerce.categoria.repositorio.CategoriaRepositorio;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import java.util.Objects;
 import java.util.Optional;
 
 @Entity
@@ -13,6 +13,13 @@ public class Categoria {
 
     public static Optional<Categoria> buscarPorNome( final String nome, final CategoriaRepositorio categoriaRepositorio ){
         return categoriaRepositorio.findByNome( nome );
+    }
+
+    public static Categoria buscarPorId( final Long id, final CategoriaRepositorio categoriaRepositorio ){
+        return categoriaRepositorio.findById( id )
+                .orElseThrow( () -> new CategoriaNaoEncontradaException(
+                        String.format("Categoria { %s } nao encontrada.", id)
+                ));
     }
 
     @Id

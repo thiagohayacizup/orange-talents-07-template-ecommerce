@@ -1,7 +1,7 @@
 package br.com.projeto.ecommerce.categoria;
 
+import br.com.projeto.ecommerce.Autenticacao;
 import br.com.projeto.ecommerce.MockErro;
-import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,15 +35,11 @@ class CategoriaIntegrationTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        bearerToken = JsonPath.read(mockMvc.perform(
-                        MockMvcRequestBuilders
-                                .post("/usuario")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content("{\"email\":\"marcos.silveira@email.com\",\"senha\":\"123456\"}")
-                ).andDo(MockMvcResultHandlers.print())
-                .andReturn()
-                .getResponse()
-                .getContentAsString(), "$.token");
+        bearerToken = Autenticacao.autenticar(
+                mockMvc,
+                "/usuario",
+                "{\"email\":\"marcos.silveira@email.com\",\"senha\":\"123456\"}"
+        );
     }
 
     @Test

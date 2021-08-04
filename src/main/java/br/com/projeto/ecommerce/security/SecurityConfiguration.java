@@ -34,6 +34,7 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers( HttpMethod.POST, "/usuario" ).permitAll()
+                .antMatchers( "/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable()
                 .sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS )
@@ -41,6 +42,7 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         new AutenticacaoInterceptador(token, usuarioRepositorio),
                         UsernamePasswordAuthenticationFilter.class
                 );
+        http.headers().frameOptions().disable();
     }
 
     @Override

@@ -1,6 +1,4 @@
-package br.com.projeto.ecommerce.usuario.modelo;
-
-import org.springframework.security.core.GrantedAuthority;
+package br.com.projeto.ecommerce.produto.modelo;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +7,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
 @Entity
-class Perfil implements GrantedAuthority {
+public class Caracteristica {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
@@ -18,11 +16,14 @@ class Perfil implements GrantedAuthority {
     @NotBlank
     private String nome;
 
-    private Perfil(){}
+    @NotBlank
+    private String descricao;
 
-    @Override
-    public String getAuthority() {
-        return nome;
+    private Caracteristica(){}
+
+    public Caracteristica(final String nome, final String descricao) {
+        this.nome = nome;
+        this.descricao = descricao;
     }
 
 }
