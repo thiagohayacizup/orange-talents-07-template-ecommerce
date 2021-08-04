@@ -1,6 +1,7 @@
 package br.com.projeto.ecommerce.usuario;
 
 import br.com.projeto.ecommerce.MockErro;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.nio.file.Files;
+import java.util.Map;
 
 @ActiveProfiles( value = "test" )
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext( classMode = DirtiesContext.ClassMode.BEFORE_CLASS )
+@DirtiesContext( classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD )
 class UsuarioIntegrationTest {
 
     private static final String USUARIO_ENDPOINT = "/usuario";

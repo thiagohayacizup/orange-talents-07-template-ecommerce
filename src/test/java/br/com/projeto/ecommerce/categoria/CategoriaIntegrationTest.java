@@ -1,6 +1,8 @@
 package br.com.projeto.ecommerce.categoria;
 
 import br.com.projeto.ecommerce.MockErro;
+import com.jayway.jsonpath.JsonPath;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,21 @@ class CategoriaIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private String bearerToken;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        bearerToken = JsonPath.read(mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/usuario")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"email\":\"marcos.silveira@email.com\",\"senha\":\"123456\"}")
+                ).andDo(MockMvcResultHandlers.print())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(), "$.token");
+    }
+
     @Test
     @DisplayName("Categoria esta cadastrada com sucesso")
     void categoriaEstaCadastradaSucesso() throws Exception{
@@ -36,6 +53,7 @@ class CategoriaIntegrationTest {
                         MockMvcRequestBuilders
                                 .post(CATEGORIA_ENDPOINT)
                                 .contentType( MediaType.APPLICATION_JSON )
+                                .header("Authorization", "Bearer " + bearerToken )
                                 .content(
                                         Files.readString(
                                                 ResourceUtils
@@ -59,7 +77,7 @@ class CategoriaIntegrationTest {
                         .getFile("classpath:br/com/projeto/ecommerce/categoria/categoria-ja-cadastrada.json")
                         .toPath()
         );
-        MockErro.mockBadRequest(mockMvc, request, CATEGORIA_ENDPOINT);
+        MockErro.mockBadRequestToken(mockMvc, request, CATEGORIA_ENDPOINT, bearerToken);
     }
 
     @Test
@@ -70,7 +88,18 @@ class CategoriaIntegrationTest {
                         .getFile("classpath:br/com/projeto/ecommerce/categoria/nome-categoria-invalido.json")
                         .toPath()
         );
-        MockErro.mockBadRequest(mockMvc, request, CATEGORIA_ENDPOINT);
+        MockErro.mockBadRequestToken(mockMvc, request, CATEGORIA_ENDPOINT, bearerToken);
+    }
+
+    @Test
+    @DisplayName("Nao tem Permissao")
+    void naoTemPermissao() throws Exception {
+        final String request = Files.readString(
+                ResourceUtils
+                        .getFile("classpath:br/com/projeto/ecommerce/categoria/nome-categoria-invalido.json")
+                        .toPath()
+        );
+        MockErro.forbidden(mockMvc, request, CATEGORIA_ENDPOINT);
     }
 
     @Test
@@ -81,6 +110,7 @@ class CategoriaIntegrationTest {
                         MockMvcRequestBuilders
                                 .post(CATEGORIA_ENDPOINT)
                                 .contentType( MediaType.APPLICATION_JSON )
+                                .header("Authorization", "Bearer " + bearerToken )
                                 .content(
                                         Files.readString(
                                                 ResourceUtils

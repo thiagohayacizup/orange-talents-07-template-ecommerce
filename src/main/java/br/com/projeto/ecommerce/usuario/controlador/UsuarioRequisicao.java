@@ -1,7 +1,9 @@
 package br.com.projeto.ecommerce.usuario.controlador;
 
+import br.com.projeto.ecommerce.security.Security;
 import br.com.projeto.ecommerce.usuario.modelo.Usuario;
 import br.com.projeto.ecommerce.usuario.repositorio.UsuarioRepositorio;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -20,11 +22,12 @@ class UsuarioRequisicao {
         this.senha = senha;
     }
 
-    UsuarioResposta cadastrar(final UsuarioRepositorio usuarioRepositorio ){
-        return new UsuarioResposta(
-                new Usuario( email, senha )
-                        .cadastrar( usuarioRepositorio )
-        );
+    Usuario cadastrar(final UsuarioRepositorio usuarioRepositorio ){
+        return new Usuario( email, senha ).cadastrar( usuarioRepositorio );
+    }
+
+    UsernamePasswordAuthenticationToken toUsernamePasswordAuthenticationToken(){
+        return new UsernamePasswordAuthenticationToken( email, senha );
     }
 
 }
