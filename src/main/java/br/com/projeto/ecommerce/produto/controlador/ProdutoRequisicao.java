@@ -65,7 +65,7 @@ class ProdutoRequisicao {
                                 .map( caracteristicas -> new Caracteristica(caracteristicas.getNome(), caracteristicas.getDescricao()) )
                                 .collect(Collectors.toList())
                 ).comCategoria( Categoria.buscarPorId( categoriaId, categoriaRepositorio ) )
-                .comUsuario(Usuario.buscarPorEmail( dono, usuarioRepositorio ) )
+                .comUsuario( Usuario.buscarPorEmail( dono, usuarioRepositorio ) )
                 .construir()
                 .cadastrar( produtoRepositorio )
         );

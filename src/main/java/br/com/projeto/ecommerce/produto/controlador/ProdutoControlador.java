@@ -33,8 +33,8 @@ class ProdutoControlador {
 
     @PostMapping("/produto/{id}/imagens")
     @ResponseStatus( HttpStatus.OK )
-    public @ResponseBody ProdutoImagensResposta cadastrarImagens(@PathVariable("id") final Long id, @Valid final ProdutoImagensRequisicao produtoImagensRequisicao ){
-        return produtoImagensRequisicao.associaImagens(id, produtoRepositorio);
+    public @ResponseBody ProdutoImagensResposta cadastrarImagens(@PathVariable("id") final Long id, @RequestParam(required = true) final String dono, @Valid final ProdutoImagensRequisicao produtoImagensRequisicao ){
+        return produtoImagensRequisicao.associaImagens(id, produtoRepositorio, dono, usuarioRepositorio);
     }
 
 }

@@ -1,6 +1,7 @@
 package br.com.projeto.ecommerce.produto;
 
 import br.com.projeto.ecommerce.Autenticacao;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 
 @ActiveProfiles( value = "test" )
 @SpringBootTest
@@ -45,6 +47,7 @@ class ImagensIntegrationTest {
     @DisplayName("Imagens cadastradas sucesso")
     @Sql(scripts = {"inserir-produto.sql"})
     void imagensCadastradasSucesso() throws Exception{
+        final ObjectMapper objectMapper = new ObjectMapper();
         mockMvc.perform(
                         MockMvcRequestBuilders
                                 .multipart(PRODUTO_IMAGENS_ENDPOINT)
@@ -54,6 +57,7 @@ class ImagensIntegrationTest {
                                                 new FileInputStream("src/test/resources/br/com/projeto/ecommerce/produto/teste.png")
                                         )
                                 )
+                                .param("dono", "email@email.com")
                                 .contentType( MediaType.MULTIPART_FORM_DATA )
                                 .header("Authorization", "Bearer " + bearerToken )
                 ).andDo( MockMvcResultHandlers.print() )
@@ -74,6 +78,7 @@ class ImagensIntegrationTest {
                                                 new FileInputStream("src/test/resources/br/com/projeto/ecommerce/produto/teste.png")
                                         )
                                 )
+                                .param("dono", "email@email.com")
                                 .contentType( MediaType.MULTIPART_FORM_DATA )
                                 .header("Authorization", "Bearer " + bearerToken )
                 ).andDo( MockMvcResultHandlers.print() )
@@ -81,6 +86,29 @@ class ImagensIntegrationTest {
                 .andExpect( MockMvcResultMatchers.content().contentType( MediaType.APPLICATION_JSON ) )
                 .andExpect( MockMvcResultMatchers.jsonPath("$.codigo").value(400) )
                 .andExpect( MockMvcResultMatchers.jsonPath("$.message").value("Produto { 1 } nao encontrado.") );
+    }
+
+    @Test
+    @DisplayName("Usuario nao e dono do produto")
+    @Sql(scripts = {"inserir-produto.sql"})
+    void usuarioNaoDonoProduto() throws Exception {
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .multipart(PRODUTO_IMAGENS_ENDPOINT)
+                                .file(
+                                        new MockMultipartFile(
+                                                "imagens",
+                                                new FileInputStream("src/test/resources/br/com/projeto/ecommerce/produto/teste.png")
+                                        )
+                                )
+                                .param("dono", "marcos.silveira@email.com")
+                                .contentType( MediaType.MULTIPART_FORM_DATA )
+                                .header("Authorization", "Bearer " + bearerToken )
+                ).andDo( MockMvcResultHandlers.print() )
+                .andExpect( MockMvcResultMatchers.status().isForbidden() )
+                .andExpect( MockMvcResultMatchers.content().contentType( MediaType.APPLICATION_JSON ) )
+                .andExpect( MockMvcResultMatchers.jsonPath("$.codigo").value(403) )
+                .andExpect( MockMvcResultMatchers.jsonPath("$.message").value("Usuario { marcos.silveira@email.com } nao e dono do produto.") );
     }
 
 }

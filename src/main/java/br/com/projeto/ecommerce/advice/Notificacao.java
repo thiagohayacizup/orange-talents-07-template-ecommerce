@@ -4,6 +4,7 @@ import br.com.projeto.ecommerce.categoria.modelo.excessao.CategoriaJaCadastradaE
 import br.com.projeto.ecommerce.categoria.modelo.excessao.CategoriaNaoEncontradaException;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoDeveTerNoMinimoTresCaracteristicasException;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoNaoEncontradoException;
+import br.com.projeto.ecommerce.usuario.modelo.excessao.NaoEDonoException;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioEmailInvalidoException;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioJaCadastradoException;
 import org.springframework.http.HttpStatus;
@@ -70,6 +71,12 @@ class Notificacao {
     @ResponseStatus( HttpStatus.BAD_REQUEST )
     RespostaErro produtoNaoEncontrado( final ProdutoNaoEncontradoException exception ){
         return new RespostaErro(400, exception.getMessage());
+    }
+
+    @ExceptionHandler({NaoEDonoException.class})
+    @ResponseStatus( HttpStatus.FORBIDDEN )
+    RespostaErro naoEDono( final NaoEDonoException exception ){
+        return new RespostaErro(403, exception.getMessage());
     }
 
 }

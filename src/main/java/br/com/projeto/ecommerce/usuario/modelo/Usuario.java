@@ -1,6 +1,7 @@
 package br.com.projeto.ecommerce.usuario.modelo;
 
 import br.com.projeto.ecommerce.email.Email;
+import br.com.projeto.ecommerce.usuario.modelo.excessao.NaoEDonoException;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioEmailInvalidoException;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioJaCadastradoException;
 import br.com.projeto.ecommerce.usuario.repositorio.UsuarioRepositorio;
@@ -17,6 +18,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Usuario implements UserDetails {
@@ -72,6 +74,13 @@ public class Usuario implements UserDetails {
         return usuarioRepositorio.save( this );
     }
 
+    public void seNaoDonoThrow( final Usuario usuario ){
+        if( !this.equals( usuario ) )
+            throw new NaoEDonoException(
+                    String.format("Usuario { %s } nao e dono do produto.", usuario.getUsername())
+            );
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
@@ -105,6 +114,19 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Usuario usuario = (Usuario) o;
+        return Objects.equals(email, usuario.email) && Objects.equals(senha, usuario.senha) && Objects.equals(dataCadastro, usuario.dataCadastro) && Objects.equals(perfis, usuario.perfis);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email, senha, dataCadastro, perfis);
     }
 
 }

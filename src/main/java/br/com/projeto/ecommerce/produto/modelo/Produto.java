@@ -5,6 +5,7 @@ import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoDeveTerNoMinimoTr
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoNaoEncontradoException;
 import br.com.projeto.ecommerce.produto.repositorio.ProdutoRepositorio;
 import br.com.projeto.ecommerce.usuario.modelo.Usuario;
+import br.com.projeto.ecommerce.usuario.repositorio.UsuarioRepositorio;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -152,7 +153,8 @@ public class Produto {
                 .collect(Collectors.toSet() );
     }
 
-    public Produto associaImagens( final Set<String> imagens, final ProdutoRepositorio produtoRepositorio ){
+    public Produto associaImagens(final Set<String> imagens, final Usuario dono, final ProdutoRepositorio produtoRepositorio){
+        this.dono.seNaoDonoThrow( dono );
         linksImagens.addAll(
                 imagens
                         .stream()
