@@ -2,6 +2,7 @@ package br.com.projeto.ecommerce.produto.modelo;
 
 import br.com.projeto.ecommerce.categoria.modelo.Categoria;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoDeveTerNoMinimoTresCaracteristicasException;
+import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoNaoEncontradoException;
 import br.com.projeto.ecommerce.produto.repositorio.ProdutoRepositorio;
 import br.com.projeto.ecommerce.usuario.modelo.Usuario;
 
@@ -9,13 +10,23 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Produto {
 
     public static Builder construtor(){
         return new Builder();
+    }
+
+    public static Produto buscarPorId( final Long id, final ProdutoRepositorio produtoRepositorio ){
+        return produtoRepositorio.findById( id )
+                .orElseThrow( () -> new ProdutoNaoEncontradoException(
+                        String.format("Produto { %d } nao encontrado.", id)
+                ));
     }
 
     @Id
@@ -51,6 +62,9 @@ public class Produto {
 
     @NotNull
     private final Instant dataCadastro = Instant.now();
+
+    @OneToMany( cascade = CascadeType.MERGE )
+    private final Set<Imagem> linksImagens = new HashSet<>();
 
     private Produto(){}
 
@@ -129,6 +143,23 @@ public class Produto {
 
     public String getNome() {
         return nome;
+    }
+
+    public Set<String> getImagens(){
+        return linksImagens
+                .stream()
+                .map(Imagem::getLink)
+                .collect(Collectors.toSet() );
+    }
+
+    public Produto associaImagens( final Set<String> imagens, final ProdutoRepositorio produtoRepositorio ){
+        linksImagens.addAll(
+                imagens
+                        .stream()
+                        .map(Imagem::new)
+                        .collect(Collectors.toSet() )
+        );
+        return produtoRepositorio.save( this );
     }
 
 }

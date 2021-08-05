@@ -3,6 +3,7 @@ package br.com.projeto.ecommerce.advice;
 import br.com.projeto.ecommerce.categoria.modelo.excessao.CategoriaJaCadastradaException;
 import br.com.projeto.ecommerce.categoria.modelo.excessao.CategoriaNaoEncontradaException;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoDeveTerNoMinimoTresCaracteristicasException;
+import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoNaoEncontradoException;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioEmailInvalidoException;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioJaCadastradoException;
 import org.springframework.http.HttpStatus;
@@ -62,6 +63,12 @@ class Notificacao {
     @ExceptionHandler({ProdutoDeveTerNoMinimoTresCaracteristicasException.class})
     @ResponseStatus( HttpStatus.BAD_REQUEST )
     RespostaErro produtoComCaracteristicasInvalidas( final ProdutoDeveTerNoMinimoTresCaracteristicasException exception ){
+        return new RespostaErro(400, exception.getMessage());
+    }
+
+    @ExceptionHandler({ProdutoNaoEncontradoException.class})
+    @ResponseStatus( HttpStatus.BAD_REQUEST )
+    RespostaErro produtoNaoEncontrado( final ProdutoNaoEncontradoException exception ){
         return new RespostaErro(400, exception.getMessage());
     }
 

@@ -1,6 +1,8 @@
 package br.com.projeto.ecommerce.produto.controlador;
 
 import br.com.projeto.ecommerce.categoria.repositorio.CategoriaRepositorio;
+import br.com.projeto.ecommerce.produto.controlador.imagens.ProdutoImagensRequisicao;
+import br.com.projeto.ecommerce.produto.controlador.imagens.ProdutoImagensResposta;
 import br.com.projeto.ecommerce.produto.repositorio.ProdutoRepositorio;
 import br.com.projeto.ecommerce.usuario.repositorio.UsuarioRepositorio;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,12 @@ class ProdutoControlador {
     @ResponseStatus( HttpStatus.OK )
     public @ResponseBody ProdutoResposta cadastrar( @RequestBody @Valid final ProdutoRequisicao produtoRequisicao ){
         return produtoRequisicao.cadastrar( produtoRepositorio, categoriaRepositorio, usuarioRepositorio );
+    }
+
+    @PostMapping("/produto/{id}/imagens")
+    @ResponseStatus( HttpStatus.OK )
+    public @ResponseBody ProdutoImagensResposta cadastrarImagens(@PathVariable("id") final Long id, @Valid final ProdutoImagensRequisicao produtoImagensRequisicao ){
+        return produtoImagensRequisicao.associaImagens(id, produtoRepositorio);
     }
 
 }
