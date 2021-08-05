@@ -133,9 +133,20 @@ public class Produto {
             return new Produto( this );
         }
 
+
+    }
+    public Produto cadastrar( final ProdutoRepositorio produtoRepositorio ){
+        return produtoRepositorio.save( this );
     }
 
-    public Produto cadastrar( final ProdutoRepositorio produtoRepositorio ){
+    public Produto associaImagens(final Set<String> imagens, final Usuario dono, final ProdutoRepositorio produtoRepositorio){
+        this.dono.seNaoDonoThrow( dono );
+        linksImagens.addAll(
+                imagens
+                        .stream()
+                        .map(Imagem::new)
+                        .collect(Collectors.toSet() )
+        );
         return produtoRepositorio.save( this );
     }
 
@@ -158,15 +169,16 @@ public class Produto {
         return dono;
     }
 
-    public Produto associaImagens(final Set<String> imagens, final Usuario dono, final ProdutoRepositorio produtoRepositorio){
-        this.dono.seNaoDonoThrow( dono );
-        linksImagens.addAll(
-                imagens
-                        .stream()
-                        .map(Imagem::new)
-                        .collect(Collectors.toSet() )
-        );
-        return produtoRepositorio.save( this );
+    public BigDecimal getValor() {
+        return valor;
+    }
+
+    public List<Caracteristica> getCaracteristicas() {
+        return caracteristicas;
+    }
+
+    public String getDescricao() {
+        return descricao;
     }
 
 }

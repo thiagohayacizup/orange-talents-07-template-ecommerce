@@ -6,9 +6,26 @@ import br.com.projeto.ecommerce.usuario.modelo.Usuario;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Entity
 public class OpiniaoProduto {
+
+    public static Integer totalNotas(final List<OpiniaoProduto> opiniaoProdutoList) {
+        return opiniaoProdutoList.size();
+    }
+
+    public static Double calcularMedia(final List<OpiniaoProduto> opiniaoProdutoList) {
+        return opiniaoProdutoList
+                .stream()
+                .mapToDouble(OpiniaoProduto::getNota)
+                .reduce(Double::sum)
+                .getAsDouble() / opiniaoProdutoList.size();
+    }
+
+    public static List<OpiniaoProduto> buscarPorIdProduto(final Long id, final OpiniaoProdutoRepositorio opiniaoProdutoRepositorio) {
+        return opiniaoProdutoRepositorio.findByProduto_id( id );
+    }
 
     public static Builder construtor(){
         return new Builder();
@@ -92,6 +109,14 @@ public class OpiniaoProduto {
 
     public Long getId() {
         return id;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public Integer getNota() {
+        return nota;
     }
 
 }
