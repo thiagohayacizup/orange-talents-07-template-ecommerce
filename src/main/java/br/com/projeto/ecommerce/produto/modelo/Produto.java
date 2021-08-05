@@ -65,6 +65,7 @@ public class Produto {
     private final Instant dataCadastro = Instant.now();
 
     @OneToMany( cascade = CascadeType.MERGE )
+    @NotNull
     private final Set<Imagem> linksImagens = new HashSet<>();
 
     private Produto(){}

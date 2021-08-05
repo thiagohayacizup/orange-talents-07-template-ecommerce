@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.io.FileInputStream;
-import java.nio.charset.StandardCharsets;
 
 @ActiveProfiles( value = "test" )
 @SpringBootTest

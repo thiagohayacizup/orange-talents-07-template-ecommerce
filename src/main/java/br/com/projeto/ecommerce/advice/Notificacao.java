@@ -7,6 +7,7 @@ import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoNaoEncontradoExce
 import br.com.projeto.ecommerce.usuario.modelo.excessao.NaoEDonoException;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioEmailInvalidoException;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioJaCadastradoException;
+import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioNaoEncontradoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -46,6 +47,12 @@ class Notificacao {
     @ExceptionHandler({UsuarioJaCadastradoException.class})
     @ResponseStatus( HttpStatus.BAD_REQUEST )
     RespostaErro usuarioJaCadastrado( final UsuarioJaCadastradoException exception ){
+        return new RespostaErro(400, exception.getMessage());
+    }
+
+    @ExceptionHandler({UsuarioNaoEncontradoException.class})
+    @ResponseStatus( HttpStatus.BAD_REQUEST )
+    RespostaErro usuarioNaoEncontrado( final UsuarioNaoEncontradoException exception ){
         return new RespostaErro(400, exception.getMessage());
     }
 

@@ -4,6 +4,7 @@ import br.com.projeto.ecommerce.email.Email;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.NaoEDonoException;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioEmailInvalidoException;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioJaCadastradoException;
+import br.com.projeto.ecommerce.usuario.modelo.excessao.UsuarioNaoEncontradoException;
 import br.com.projeto.ecommerce.usuario.repositorio.UsuarioRepositorio;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +31,14 @@ public class Usuario implements UserDetails {
     public static UsernamePasswordAuthenticationToken autenticar( final Long id, final UsuarioRepositorio usuarioRepositorio ){
         final Usuario usuario = usuarioRepositorio.findById( id ).get();
         return new UsernamePasswordAuthenticationToken( usuario, null, usuario.perfis );
+    }
+
+    public static Usuario buscarPorId( final Long id, final UsuarioRepositorio usuarioRepositorio ){
+        return usuarioRepositorio
+                .findById(id)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(
+                        String.format("Usuario { %d } nao encontrado.", id)
+                ));
     }
 
     @Id
