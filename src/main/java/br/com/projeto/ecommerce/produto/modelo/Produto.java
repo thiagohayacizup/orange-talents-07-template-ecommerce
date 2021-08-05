@@ -154,6 +154,10 @@ public class Produto {
                 .collect(Collectors.toSet() );
     }
 
+    public Usuario getDono() {
+        return dono;
+    }
+
     public Produto associaImagens(final Set<String> imagens, final Usuario dono, final ProdutoRepositorio produtoRepositorio){
         this.dono.seNaoDonoThrow( dono );
         linksImagens.addAll(
