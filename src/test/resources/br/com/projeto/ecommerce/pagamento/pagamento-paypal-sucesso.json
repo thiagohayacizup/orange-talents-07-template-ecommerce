@@ -1,0 +1,6 @@
+{
+  "gatewayPagamento": "PAYPAL",
+  "compradorId": 1,
+  "produtoId": 1,
+  "quantidade": 1
+}

@@ -2,6 +2,7 @@ package br.com.projeto.ecommerce.advice;
 
 import br.com.projeto.ecommerce.categoria.modelo.excessao.CategoriaJaCadastradaException;
 import br.com.projeto.ecommerce.categoria.modelo.excessao.CategoriaNaoEncontradaException;
+import br.com.projeto.ecommerce.produto.modelo.excessao.NaoPodeAbaterQuantidadeException;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoDeveTerNoMinimoTresCaracteristicasException;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoNaoEncontradoException;
 import br.com.projeto.ecommerce.usuario.modelo.excessao.NaoEDonoException;
@@ -84,6 +85,12 @@ class Notificacao {
     @ResponseStatus( HttpStatus.FORBIDDEN )
     RespostaErro naoEDono( final NaoEDonoException exception ){
         return new RespostaErro(403, exception.getMessage());
+    }
+
+    @ExceptionHandler({NaoPodeAbaterQuantidadeException.class})
+    @ResponseStatus( HttpStatus.BAD_REQUEST )
+    RespostaErro naoPodeAbatarQuantidade( final NaoPodeAbaterQuantidadeException exception ){
+        return new RespostaErro(400, exception.getMessage());
     }
 
 }

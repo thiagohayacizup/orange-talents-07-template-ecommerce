@@ -3,11 +3,11 @@ package br.com.projeto.ecommerce.produto.modelo;
 import br.com.projeto.ecommerce.categoria.modelo.Categoria;
 import br.com.projeto.ecommerce.opiniao.produto.modelo.OpiniaoProduto;
 import br.com.projeto.ecommerce.pergunta.produto.modelo.PerguntaProduto;
+import br.com.projeto.ecommerce.produto.modelo.excessao.NaoPodeAbaterQuantidadeException;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoDeveTerNoMinimoTresCaracteristicasException;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoNaoEncontradoException;
 import br.com.projeto.ecommerce.produto.repositorio.ProdutoRepositorio;
 import br.com.projeto.ecommerce.usuario.modelo.Usuario;
-import br.com.projeto.ecommerce.usuario.repositorio.UsuarioRepositorio;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -74,7 +74,7 @@ public class Produto {
 
     @OneToMany( mappedBy = "produto" )
     @OrderBy("titulo asc")
-    private final List<OpiniaoProduto> opinioes = new ArrayList<>();
+    private List<OpiniaoProduto> opinioes = new ArrayList<>();
 
     private Produto(){}
 
@@ -143,8 +143,30 @@ public class Produto {
 
 
     }
+
     public Produto cadastrar( final ProdutoRepositorio produtoRepositorio ){
         return produtoRepositorio.save( this );
+    }
+
+    private boolean podeAbaterQuantidade( final int quantidade ){
+        return quantidade <= quantidadeDisponivel;
+    }
+
+    private void abaterEstoque( final int quantidade ){
+        quantidadeDisponivel -= quantidade;
+    }
+
+    public void abaterEstoque(final ProdutoRepositorio produtoRepositorio, final int quantidade){
+        if( !podeAbaterQuantidade( quantidade ) )
+            throw new NaoPodeAbaterQuantidadeException(
+                    String.format(
+                            "Quantidade { %d } do produto { %s } nao pode ser abatida.",
+                            quantidade,
+                            nome
+                    )
+            );
+        abaterEstoque( quantidade );
+        cadastrar( produtoRepositorio );
     }
 
     public Produto associaImagens(final Set<String> imagens, final Usuario dono, final ProdutoRepositorio produtoRepositorio){
@@ -208,6 +230,23 @@ public class Produto {
 
     public List<OpiniaoProduto> getOpinioes(){
         return opinioes;
+    }
+
+    public static Produto mock(){
+        final Produto produto = construtor()
+                .comCaracteristicas(
+                        List.of(
+                                new Caracteristica("Bateria", "4000ma"),
+                                new Caracteristica("Tela", "IPS"),
+                                new Caracteristica("5g", "possui")
+                        )
+                )
+                .construir();
+        produto.opinioes = List.of(
+                OpiniaoProduto.construtor().comNota(5).construir(),
+                OpiniaoProduto.construtor().comNota(1).construir()
+        );
+        return produto;
     }
 
 }

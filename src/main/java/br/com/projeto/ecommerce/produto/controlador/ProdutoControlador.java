@@ -46,5 +46,4 @@ class ProdutoControlador {
         return new ProdutoDetalhadoResposta( Produto.buscarPorId( id, produtoRepositorio ) );
     }
 
-
 }
