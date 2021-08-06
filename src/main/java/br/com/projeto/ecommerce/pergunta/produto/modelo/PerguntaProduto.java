@@ -8,14 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 public class PerguntaProduto {
-
-    public static List<PerguntaProduto> buscarPorIdProduto(final Long id, final PerguntaProdutoRepositorio perguntaProdutoRepositorio) {
-        return perguntaProdutoRepositorio.findByProduto_id( id );
-    }
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )

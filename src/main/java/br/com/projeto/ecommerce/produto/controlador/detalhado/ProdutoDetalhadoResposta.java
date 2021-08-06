@@ -14,14 +14,8 @@ public class ProdutoDetalhadoResposta {
 
     private final Produto produto;
 
-    private final List<PerguntaProduto> perguntaProduto;
-
-    private final List<OpiniaoProduto> opiniaoProduto;
-
-    ProdutoDetalhadoResposta(final Produto produto, final List<PerguntaProduto> perguntaProduto, final List<OpiniaoProduto> opiniaoProduto) {
+    public ProdutoDetalhadoResposta(final Produto produto) {
         this.produto = produto;
-        this.perguntaProduto = perguntaProduto;
-        this.opiniaoProduto = opiniaoProduto;
     }
 
     public String getNome(){
@@ -32,7 +26,7 @@ public class ProdutoDetalhadoResposta {
         return produto.getValor();
     }
 
-    public Set<String> getImanges(){
+    public Set<String> getImagens(){
         return produto.getImagens();
     }
 
@@ -48,25 +42,25 @@ public class ProdutoDetalhadoResposta {
     }
 
     public List<String> getPerguntas(){
-        return perguntaProduto
+        return produto.getPerguntas()
                 .stream()
                 .map(PerguntaProduto::getTitulo)
                 .collect(Collectors.toList());
     }
 
     public List<String> getOpinioes(){
-        return opiniaoProduto
+        return produto.getOpinioes()
                 .stream()
                 .map(OpiniaoProduto::getDescricao)
                 .collect(Collectors.toList());
     }
 
     public Double getMedia(){
-        return OpiniaoProduto.calcularMedia( opiniaoProduto );
+        return produto.calcularMedia();
     }
 
     public Integer getTotalNotasProduto(){
-        return OpiniaoProduto.totalNotas( opiniaoProduto );
+        return produto.totalNotas();
     }
 
 }

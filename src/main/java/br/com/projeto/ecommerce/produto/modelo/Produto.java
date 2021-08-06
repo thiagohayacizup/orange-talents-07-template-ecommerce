@@ -1,6 +1,8 @@
 package br.com.projeto.ecommerce.produto.modelo;
 
 import br.com.projeto.ecommerce.categoria.modelo.Categoria;
+import br.com.projeto.ecommerce.opiniao.produto.modelo.OpiniaoProduto;
+import br.com.projeto.ecommerce.pergunta.produto.modelo.PerguntaProduto;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoDeveTerNoMinimoTresCaracteristicasException;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoNaoEncontradoException;
 import br.com.projeto.ecommerce.produto.repositorio.ProdutoRepositorio;
@@ -11,9 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -67,6 +67,14 @@ public class Produto {
     @OneToMany( cascade = CascadeType.MERGE )
     @NotNull
     private final Set<Imagem> linksImagens = new HashSet<>();
+
+    @OneToMany( mappedBy = "produto" )
+    @OrderBy("titulo asc")
+    private final List<PerguntaProduto> perguntas = new ArrayList<>();
+
+    @OneToMany( mappedBy = "produto" )
+    @OrderBy("titulo asc")
+    private final List<OpiniaoProduto> opinioes = new ArrayList<>();
 
     private Produto(){}
 
@@ -150,6 +158,19 @@ public class Produto {
         return produtoRepositorio.save( this );
     }
 
+    public Integer totalNotas() {
+        return opinioes.size();
+    }
+
+    public Double calcularMedia() {
+        final OptionalDouble reduce = opinioes
+                .stream()
+                .mapToDouble(OpiniaoProduto::getNota)
+                .reduce(Double::sum);
+        if( reduce.isEmpty() ) return 0.0;
+        return reduce.getAsDouble() /opinioes.size();
+    }
+
     public Long getId() {
         return id;
     }
@@ -179,6 +200,14 @@ public class Produto {
 
     public String getDescricao() {
         return descricao;
+    }
+
+    public List<PerguntaProduto> getPerguntas(){
+        return perguntas;
+    }
+
+    public List<OpiniaoProduto> getOpinioes(){
+        return opinioes;
     }
 
 }
