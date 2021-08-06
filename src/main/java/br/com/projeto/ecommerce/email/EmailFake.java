@@ -1,6 +1,6 @@
-package br.com.projeto.ecommerce.pergunta.produto.controlador;
+package br.com.projeto.ecommerce.email;
 
-class EmailFake {
+public class EmailFake {
 
     public static void send(final String paraQuem, final String conteudo, final String de){
         System.out.println("Para: " + paraQuem);

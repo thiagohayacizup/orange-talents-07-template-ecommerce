@@ -1,5 +1,6 @@
 package br.com.projeto.ecommerce.pagamento.compra.controlador;
 
+import br.com.projeto.ecommerce.email.EmailFake;
 import br.com.projeto.ecommerce.pagamento.compra.repositorio.CompraRepositorio;
 import br.com.projeto.ecommerce.produto.repositorio.ProdutoRepositorio;
 import br.com.projeto.ecommerce.usuario.repositorio.UsuarioRepositorio;
@@ -24,7 +25,9 @@ class CompraControlador {
     @PostMapping("/compra")
     @ResponseStatus( HttpStatus.FOUND )
     public @ResponseBody CompraResposta realizarCompra( @RequestBody @Valid final CompraRequisicao compraRequisicao ){
-        return compraRequisicao.realizarCompra( compraRepositorio, produtoRepositorio, usuarioRepositorio );
+        final CompraResposta compraResposta = compraRequisicao.realizarCompra(compraRepositorio, produtoRepositorio, usuarioRepositorio);
+        EmailFake.send( compraResposta.emailVendedor(), "Compra Registrada", compraResposta.emailComprador() );
+        return compraResposta;
     }
 
 }

@@ -1,5 +1,6 @@
 package br.com.projeto.ecommerce.pergunta.produto.controlador;
 
+import br.com.projeto.ecommerce.email.EmailFake;
 import br.com.projeto.ecommerce.pergunta.produto.repositorio.PerguntaProdutoRepositorio;
 import br.com.projeto.ecommerce.produto.repositorio.ProdutoRepositorio;
 import br.com.projeto.ecommerce.usuario.repositorio.UsuarioRepositorio;

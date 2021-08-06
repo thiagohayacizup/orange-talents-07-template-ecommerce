@@ -1,15 +1,25 @@
 package br.com.projeto.ecommerce.pagamento.compra.controlador;
 
+import br.com.projeto.ecommerce.pagamento.compra.modelo.Compra;
+
 class CompraResposta {
 
-    private final String linkGateway;
+    private final Compra compra;
 
-    CompraResposta(final String linkGateway) {
-        this.linkGateway = linkGateway;
+    CompraResposta(final Compra compra) {
+        this.compra = compra;
     }
 
     public String getLinkPagamento(){
-        return linkGateway;
+        return compra.getPagamento();
+    }
+
+    String emailComprador(){
+        return compra.getComprador().getUsername();
+    }
+
+    String emailVendedor(){
+        return compra.getProduto().getDono().getUsername();
     }
 
 }

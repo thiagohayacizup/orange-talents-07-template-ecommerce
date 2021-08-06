@@ -88,12 +88,20 @@ public class Compra {
 
     }
 
-    public String getLinkPagamento() {
+    public String getPagamento() {
         return gatewayPagamento.redirect( id );
     }
 
     public Long getId(){
         return id;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public Usuario getComprador() {
+        return comprador;
     }
 
 }

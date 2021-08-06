@@ -57,7 +57,6 @@ class CompraRequisicao {
                         .comQuantidade( quantidade )
                         .construir()
                         .registrar( compraRepositorio, produtoRepositorio )
-                        .getLinkPagamento()
         );
     }
 
