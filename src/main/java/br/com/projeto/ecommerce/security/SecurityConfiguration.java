@@ -34,6 +34,8 @@ class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(final HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers( HttpMethod.POST, "/usuario" ).permitAll()
+                .antMatchers( HttpMethod.POST, "/nf/**").permitAll()
+                .antMatchers( HttpMethod.POST, "/ranking/**").permitAll()
                 .antMatchers( "/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 .and().csrf().disable()

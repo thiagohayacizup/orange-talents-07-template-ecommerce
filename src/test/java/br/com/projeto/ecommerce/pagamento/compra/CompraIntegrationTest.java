@@ -2,8 +2,6 @@ package br.com.projeto.ecommerce.pagamento.compra;
 
 import br.com.projeto.ecommerce.Autenticacao;
 import br.com.projeto.ecommerce.MockErro;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -65,7 +62,7 @@ class CompraIntegrationTest {
                 ).andDo( MockMvcResultHandlers.print() )
                 .andExpect( MockMvcResultMatchers.status().isFound() )
                 .andExpect( MockMvcResultMatchers.content().contentType( MediaType.APPLICATION_JSON ) )
-                .andExpect( MockMvcResultMatchers.jsonPath("$.linkPagamento").value("pagseguro.com?returnId=1&redirectUrl=/pagseguro") );
+                .andExpect( MockMvcResultMatchers.jsonPath("$.linkPagamento").value("pagseguro.com?returnId=1&redirectUrl=/pagseguro/1") );
     }
 
     @Test
@@ -87,7 +84,7 @@ class CompraIntegrationTest {
                 ).andDo( MockMvcResultHandlers.print() )
                 .andExpect( MockMvcResultMatchers.status().isFound() )
                 .andExpect( MockMvcResultMatchers.content().contentType( MediaType.APPLICATION_JSON ) )
-                .andExpect( MockMvcResultMatchers.jsonPath("$.linkPagamento").value("paypal.com?buyerId=1&redirectUrl=/paypal") );
+                .andExpect( MockMvcResultMatchers.jsonPath("$.linkPagamento").value("paypal.com?buyerId=1&redirectUrl=/paypal/1") );
     }
 
     @Test

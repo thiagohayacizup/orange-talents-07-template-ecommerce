@@ -2,6 +2,7 @@ package br.com.projeto.ecommerce.advice;
 
 import br.com.projeto.ecommerce.categoria.modelo.excessao.CategoriaJaCadastradaException;
 import br.com.projeto.ecommerce.categoria.modelo.excessao.CategoriaNaoEncontradaException;
+import br.com.projeto.ecommerce.pagamento.compra.modelo.excessao.CompraNaoEncontradaException;
 import br.com.projeto.ecommerce.pagamento.compra.modelo.excessao.TransacaoJaProcessadaException;
 import br.com.projeto.ecommerce.produto.modelo.excessao.NaoPodeAbaterQuantidadeException;
 import br.com.projeto.ecommerce.produto.modelo.excessao.ProdutoDeveTerNoMinimoTresCaracteristicasException;
@@ -97,6 +98,12 @@ class Notificacao {
     @ExceptionHandler({TransacaoJaProcessadaException.class})
     @ResponseStatus( HttpStatus.BAD_REQUEST )
     RespostaErro transacaoJaProcessada( final TransacaoJaProcessadaException exception ){
+        return new RespostaErro(400, exception.getMessage());
+    }
+
+    @ExceptionHandler({CompraNaoEncontradaException.class})
+    @ResponseStatus( HttpStatus.BAD_REQUEST )
+    RespostaErro compraNaoEncontrada( final CompraNaoEncontradaException exception ){
         return new RespostaErro(400, exception.getMessage());
     }
 

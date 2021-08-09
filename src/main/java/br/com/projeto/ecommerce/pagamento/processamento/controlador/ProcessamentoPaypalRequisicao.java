@@ -12,20 +12,22 @@ import javax.validation.constraints.NotBlank;
 class ProcessamentoPaypalRequisicao {
 
     @NotBlank
-    private final String idPagamento;
+    private String idPagamento;
 
     @Min(0)
     @Max(1)
-    private final int statusPaypal;
+    private int statusPaypal;
 
-    ProcessamentoPaypalRequisicao(final String idPagamento, final int statusPaypal) {
+    public void setIdPagamento(final String idPagamento) {
         this.idPagamento = idPagamento;
+    }
+
+    public void setStatusPaypal(final int statusPaypal) {
         this.statusPaypal = statusPaypal;
     }
 
-
-    void adicionaTransacao(final Long idCompra,final CompraRepositorio compraRepositorio) {
-        Compra
+    Compra adicionaTransacao(final Long idCompra, final CompraRepositorio compraRepositorio) {
+        return Compra
                 .buscarPorId(idCompra, compraRepositorio)
                 .adicionarTransacao(
                         new Transacao(StatusTransacao.obterStatus(statusPaypal), idPagamento ),

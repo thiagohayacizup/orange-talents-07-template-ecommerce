@@ -23,8 +23,8 @@ class ProcessamentoPagseguroRequisicao {
         this.statusPagseguro = statusPagseguro;
     }
 
-    void adicionaTransacao(final Long idCompra, final CompraRepositorio compraRepositorio) {
-        Compra
+    Compra adicionaTransacao(final Long idCompra, final CompraRepositorio compraRepositorio) {
+        return Compra
                 .buscarPorId(idCompra, compraRepositorio)
                 .adicionarTransacao(
                         new Transacao(statusPagseguro.normaliza(), idPagamento ),

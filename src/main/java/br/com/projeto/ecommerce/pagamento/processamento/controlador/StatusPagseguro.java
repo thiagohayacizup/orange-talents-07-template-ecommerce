@@ -12,4 +12,5 @@ enum StatusPagseguro {
             return StatusTransacao.SUCESSO;
         return StatusTransacao.ERRO;
     }
+
 }

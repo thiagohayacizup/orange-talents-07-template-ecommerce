@@ -73,14 +73,14 @@ public class Compra {
         return compraRepositorio.save( this );
     }
 
-    public void adicionarTransacao(final Transacao transacao, final CompraRepositorio compraRepositorio) {
+    public Compra adicionarTransacao(final Transacao transacao, final CompraRepositorio compraRepositorio) {
         if( transacaoCadastrada( transacao ) ) throw new TransacaoJaProcessadaException("Transacao ja foi processada");
-        if( transacaoConcluidaCadastrada( transacao ) ) throw new TransacaoJaProcessadaException("Transacao ja foi concluida com sucesso");
+        if( transacaoConcluidaCadastrada() ) throw new TransacaoJaProcessadaException("Transacao ja foi concluida com sucesso");
         transacoes.add( transacao );
-        compraRepositorio.save( this );
+        return compraRepositorio.save( this );
     }
 
-    private boolean transacaoConcluidaCadastrada( final Transacao transacao ){
+    public boolean transacaoConcluidaCadastrada(){
         return !transacoes
                 .stream()
                 .filter(Transacao::concluidaComSucesso)
